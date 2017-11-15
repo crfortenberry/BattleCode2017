@@ -18,26 +18,25 @@ public class Soldier extends Robot {
                 RobotInfo[] enemyRobots = robotController.senseNearbyRobots(-1, enemy);
                 if (enemyRobots.length > 0) {
                     targeting = true;
-                    soldierAimDir = robotController.getLocation().directionTo(enemyRobots[0].location);
-                    soldierMoveDir = soldierAimDir.rotateLeftRads(1.3f);
+                    soldierMoveDir = robotController.getLocation().directionTo(enemyRobots[0].location).rotateLeftRads(1.3f);
                     tryMove(soldierMoveDir);
+                    soldierAimDir = robotController.getLocation().directionTo(enemyRobots[0].location);
+                } else if (targeting) {
+//                    TreeInfo[] enemyTrees = robotController.senseNearbyTrees(-1, enemy);
+//                    if (enemyTrees.length > 0){
+//                        soldierAimDir = robotController.getLocation().directionTo((enemyTrees[0].location));
+//                    } else {
+                        targeting = false;
+                        soldierMoveDir = soldierAimDir;
+//                    }
+                }
+
+                //shoot the thing
+                if (targeting) {
                     if (robotController.canFireTriadShot()) {
                         robotController.fireTriadShot(soldierAimDir);
                     } else if (robotController.canFireSingleShot()) {
                         robotController.fireSingleShot(soldierAimDir);
-                    }
-                } else if (targeting) {
-                    TreeInfo[] enemyTrees = robotController.senseNearbyTrees(-1, enemy);
-                    if (enemyTrees.length > 0){
-                        soldierAimDir = robotController.getLocation().directionTo((enemyTrees[0].location));
-                        if (robotController.canFireTriadShot()) {
-                            robotController.fireTriadShot(soldierAimDir);
-                        } else if (robotController.canFireSingleShot()) {
-                            robotController.fireSingleShot(soldierAimDir);
-                        }
-                    } else {
-                        targeting = false;
-                        soldierMoveDir = soldierAimDir;
                     }
                 }
 
