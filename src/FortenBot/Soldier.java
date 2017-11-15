@@ -3,41 +3,51 @@ import battlecode.common.*;
 
 public class Soldier extends Robot {
     public void onUpdate() {
-        boolean settled = false;
-        Direction soldierDir = null;
+        boolean targeting = false;
+        Direction soldierMoveDir = null;
+        Direction soldierAimDir = null;
 
         while (true) {
             try {
                 Direction direction = randomDirection();
-                if(soldierDir == null) {
-                    soldierDir = direction;
+                if(soldierMoveDir == null) {
+                    soldierMoveDir = direction;
                 }
 
                 //look for something to shoot
                 RobotInfo[] enemyRobots = robotController.senseNearbyRobots(-1, enemy);
                 if (enemyRobots.length > 0) {
-                    settled = true;
+                    targeting = true;
+                    soldierAimDir = robotController.getLocation().directionTo(enemyRobots[0].location);
+                    soldierMoveDir = soldierAimDir.rotateLeftRads(1.3f);
+                    tryMove(soldierMoveDir);
                     if (robotController.canFireTriadShot()) {
-                        robotController.fireTriadShot(robotController.getLocation().directionTo(enemyRobots[0].location));
+                        robotController.fireTriadShot(soldierAimDir);
+                    } else if (robotController.canFireSingleShot()) {
+                        robotController.fireSingleShot(soldierAimDir);
                     }
-                } else if (settled) {
+                } else if (targeting) {
                     TreeInfo[] enemyTrees = robotController.senseNearbyTrees(-1, enemy);
                     if (enemyTrees.length > 0){
+                        soldierAimDir = robotController.getLocation().directionTo((enemyTrees[0].location));
                         if (robotController.canFireTriadShot()) {
-                            robotController.fireTriadShot(robotController.getLocation().directionTo((enemyTrees[0].location)));
+                            robotController.fireTriadShot(soldierAimDir);
+                        } else if (robotController.canFireSingleShot()) {
+                            robotController.fireSingleShot(soldierAimDir);
                         }
                     } else {
-                        settled = false;
+                        targeting = false;
+                        soldierMoveDir = soldierAimDir;
                     }
                 }
 
                 //move around
-                if (!settled) {
-                    if(tryMove(soldierDir)) {
-                        System.out.println("Gardener moved");
+                if (!targeting) {
+                    if(tryMove(soldierMoveDir)) {
+                        System.out.println("Soldier moved");
                     } else {
-                        soldierDir = randomDirection();
-                        tryMove(soldierDir);
+                        soldierMoveDir = randomDirection();
+                        tryMove(soldierMoveDir);
                     }
                 }
                 Clock.yield();

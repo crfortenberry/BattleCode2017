@@ -9,7 +9,11 @@ public class Archon extends Robot {
         while (true) {
             try{
                 Direction direction = randomDirection();
-                if (robotController.canHireGardener(direction) && numberOfGardeners < 16) {
+                if (robotController.canHireGardener(direction) && numberOfGardeners < 10) {
+                    robotController.hireGardener(direction);
+                    System.out.println("number of gardeners: "+ numberOfGardeners);
+                    numberOfGardeners++;
+                } else if (robotController.canHireGardener(direction) && numberOfGardeners < 16 && Math.random() < .01) {
                     robotController.hireGardener(direction);
                     System.out.println("number of gardeners: "+ numberOfGardeners);
                     numberOfGardeners++;

@@ -5,7 +5,6 @@ public class Gardener extends Robot {
     public void onUpdate() {
         boolean settled = false;
         Direction gardenerDir = null;
-        int numberOfTrees = 0;
 
         while (true) {
             try {
@@ -22,24 +21,22 @@ public class Gardener extends Robot {
                         robotController.broadcastInt(1, 1);
                     } else if (robotController.canPlantTree(gardenerDir)) {
                         robotController.plantTree(gardenerDir);
-                        numberOfTrees++;
                     }
                 }
 
+                TreeInfo[] trees = robotController.senseNearbyTrees(robotType.bodyRadius * 2, myTeam);
                 //build a soldier or plant a tree
                 if (settled) {
                     if (robotController.canBuildRobot(RobotType.SOLDIER, gardenerDir) && robotController.readBroadcastInt(2) < 16) {
                         robotController.buildRobot(RobotType.SOLDIER, gardenerDir);
                         System.out.println("Made a soldier");
-                    } else if (robotController.canPlantTree(direction) && numberOfTrees < 3) {
+                    } else if (robotController.canPlantTree(direction) && trees.length < 3) {
                         robotController.plantTree(direction);
-                        numberOfTrees++;
-                        System.out.println("Number of trees: " + numberOfTrees);
+                        System.out.println("Number of trees: " + trees.length);
                     }
                 }
 
                 //care for trees
-                TreeInfo[] trees = robotController.senseNearbyTrees(robotType.bodyRadius * 2, myTeam);
                 TreeInfo minHealthTree = null;
                 for (TreeInfo tree : trees) {
                     if (tree.health < 70) {
