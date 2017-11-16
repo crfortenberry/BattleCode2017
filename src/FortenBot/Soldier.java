@@ -22,13 +22,17 @@ public class Soldier extends Robot {
                     tryMove(soldierMoveDir);
                     soldierAimDir = robotController.getLocation().directionTo(enemyRobots[0].location);
                 } else if (targeting) {
-//                    TreeInfo[] enemyTrees = robotController.senseNearbyTrees(-1, enemy);
-//                    if (enemyTrees.length > 0){
-//                        soldierAimDir = robotController.getLocation().directionTo((enemyTrees[0].location));
-//                    } else {
+                    TreeInfo[] enemyTrees = robotController.senseNearbyTrees(-1, enemy);
+                    if (enemyTrees.length > 0){
+                        soldierMoveDir = robotController.getLocation().directionTo((enemyTrees[0].location));
+                        if (Math.random() < .1){
+                            tryMove(soldierMoveDir);
+                        }
+                        soldierAimDir = soldierMoveDir;
+                    } else {
                         targeting = false;
                         soldierMoveDir = soldierAimDir;
-//                    }
+                    }
                 }
 
                 //shoot the thing

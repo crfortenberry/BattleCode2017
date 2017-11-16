@@ -24,13 +24,17 @@ public class Gardener extends Robot {
                     }
                 }
 
+                //build a soldier
+                if (robotController.canBuildRobot(RobotType.SOLDIER, gardenerDir) && robotController.readBroadcastInt(2) < 16) {
+                    robotController.buildRobot(RobotType.SOLDIER, gardenerDir);
+                    robotController.broadcastInt(1, 1);
+                    System.out.println("Made a soldier");
+                }
+
+                //plant a tree
                 TreeInfo[] trees = robotController.senseNearbyTrees(robotType.bodyRadius * 2, myTeam);
-                //build a soldier or plant a tree
                 if (settled) {
-                    if (robotController.canBuildRobot(RobotType.SOLDIER, gardenerDir) && robotController.readBroadcastInt(2) < 16) {
-                        robotController.buildRobot(RobotType.SOLDIER, gardenerDir);
-                        System.out.println("Made a soldier");
-                    } else if (robotController.canPlantTree(direction) && trees.length < 3) {
+                     if (robotController.canPlantTree(direction) && trees.length < 3) {
                         robotController.plantTree(direction);
                         System.out.println("Number of trees: " + trees.length);
                     }
