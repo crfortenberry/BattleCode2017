@@ -2,10 +2,30 @@ package FortenBot;
 import battlecode.common.*;
 
 public class Soldier extends Robot {
+    @Override
+    public void onAwake() {
+        try {
+            robotController.broadcastInt(1,1);
+            Clock.yield();
+            robotController.broadcastInt(1,0);
+        } catch (Exception e) {
+            System.out.println("Exception in Soldier");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void onUpdate() {
         boolean targeting = false;
         Direction soldierMoveDir = null;
         Direction soldierAimDir = null;
+
+        try {
+            soldierMoveDir = getEnemyArchonDirection();
+        } catch (Exception e) {
+            System.out.println("Exception in Soldier");
+            e.printStackTrace();
+        }
 
         while (true) {
             try {
@@ -54,7 +74,7 @@ public class Soldier extends Robot {
                     }
                 }
                 Clock.yield();
-            }catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println("Exception in Soldier");
                 e.printStackTrace();
             }

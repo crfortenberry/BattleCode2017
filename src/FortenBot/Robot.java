@@ -19,6 +19,8 @@ abstract class Robot {
         enemy = myTeam.opponent();
     }
 
+    abstract void onAwake() throws GameActionException;
+
     abstract void onUpdate() throws GameActionException;
 
     /**
@@ -27,6 +29,21 @@ abstract class Robot {
      */
     static Direction randomDirection() {
         return new Direction((float)Math.random() * 2 * (float)Math.PI);
+    }
+
+    /**
+     * Returns the direction of an enemy archon
+     * @return the direction of the selected archon
+     */
+    static Direction getEnemyArchonDirection() throws GameActionException {
+        MapLocation[] enemyArchonLocations = robotController.getInitialArchonLocations(enemy);
+        MapLocation closestEnemyArchon = null;
+        for (MapLocation loc: enemyArchonLocations) {
+            if (closestEnemyArchon == null || spawnLocation.distanceTo(loc) < spawnLocation.distanceTo(closestEnemyArchon)) {
+                closestEnemyArchon = loc;
+            }
+        }
+        return spawnLocation.directionTo(closestEnemyArchon);
     }
 
     /**

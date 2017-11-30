@@ -20,16 +20,17 @@ public strictfp class RobotPlayer {
                     robot = new Soldier();
                     break;
             }
+            robot.onAwake();
         } catch (Exception e) {
                 System.out.println("Exception in " + robotController.getType());
                 e.printStackTrace();
-            }
-            while(true) {
+        }
+        while(true) {
             try {
                 while(true) {
                     robot.onUpdate();
                 }
-                } catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println("Exception in " + robotController.getType());
                 e.printStackTrace();
             }
