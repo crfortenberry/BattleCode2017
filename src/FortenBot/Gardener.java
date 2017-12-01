@@ -37,10 +37,12 @@ public class Gardener extends Robot {
 
                 //plant a tree
                 TreeInfo[] trees = robotController.senseNearbyTrees(robotType.bodyRadius * 2, myTeam);
-                if (settled && trees.length < 5) {
-                    tryFarm(gardenerDir);
-                } else if (robotController.readBroadcastInt(2) >= maxSoldiers && robotController.canPlantTree(gardenerDir.opposite())) {
-                    robotController.plantTree(gardenerDir.opposite());
+                if (settled) {
+                    if (trees.length < 5) {
+                        tryFarm(gardenerDir);
+                    } else if (robotController.readBroadcastInt(2) >= maxSoldiers && robotController.canPlantTree(gardenerDir.opposite())) {
+                        robotController.plantTree(gardenerDir.opposite());
+                    }
                 }
 
                 //care for trees

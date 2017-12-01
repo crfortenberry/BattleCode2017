@@ -55,9 +55,17 @@ public class Soldier extends Robot {
                     }
                 }
 
-                //shoot the thing
+                //try to shoot the thing
                 if (targeting) {
-                    if (robotController.canFireTriadShot()) {
+                    //if a teammate is in the way, reposition first
+                    if (robotController.senseNearbyRobots(robotController.getLocation().add(soldierAimDir,
+                            robotType.bodyRadius+robotType.sensorRadius/2),
+                            robotType.sensorRadius/3, myTeam).length > 0) {
+                        soldierMoveDir = soldierAimDir.rotateRightDegrees(30);
+                        if (tryMove(soldierMoveDir) && robotController.canFireSingleShot()) {
+                            robotController.fireSingleShot(soldierAimDir);
+                        }
+                    } else if (robotController.getRoundNum() > 100 && robotController.canFireTriadShot()) {
                         robotController.fireTriadShot(soldierAimDir);
                     } else if (robotController.canFireSingleShot()) {
                         robotController.fireSingleShot(soldierAimDir);
